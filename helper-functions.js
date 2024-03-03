@@ -13,52 +13,55 @@
 // Canvas manipulation
 // ----------------------------------------------------
 
-function getContextAndPixels(canvas, contextAttributes) {
+function setPixels(A, imData, W, H) {
+  A.map(([x, y]) => setPixel(x, y, imData, W, H))
+}
+
+function getContextAndPixels(canvas) {
 
 
   // ----------------------------------------------------
   // Bootstrap
   // ----------------------------------------------------
-  const ctx = canvas.getContext('2d', contextAttributes)
+  const ctx = canvas.getContext('2d')
   const {width: W, height: H} = canvas.getBoundingClientRect()
   const [x0,y0] = [0, 0]
   console.log({x0, y0, W, H})
+
   const imData = ctx.getImageData(x0,y0,W,H)
 
   return {ctx, imData, x0, y0, W, H}
 
 }
 
-function setPixels(A, imData, W, H, fg=[0,0,0,255]) {
-  console.debug({fg,W,H})
-  A.map(([x, y]) => setPixelSafe(x, y, imData, W, H, fg))
-}
-
-function setPixelSafe(
-  px, py,
-  imData, W, H,
-  fg=[0,0,0,255]
-) {
-  try {
-    setPixel(
-      px, py,
-      imData, W, H,
-      fg,
-    )
-  } catch (e) {
-    console.error({px, py})
-    throw e
-  }
-}
 
 function setPixel(
   px, py,
-  imData, W, H,
-  fg=[0,0,0,255]
-)
- {
+  imData, W, H
+) {
 
-  const [r,g,b,a] = fg
+  let r,g,b,a
+  
+  // Set color
+  r = g = b = a = 255
+
+  return setPixelColor(
+    px, py,
+    r, g, b, a,
+    imData, W, H
+  )
+}
+
+function setPixelColor(
+  px, py,
+  r, g, b, a,
+  imData, W, H
+) {
+
+  // --------------------------------------------------
+  // Manipulate the imData
+  // --------------------------------------------------
+
   let offset, pixels
 
   // Retrieve Image Data as pixels
