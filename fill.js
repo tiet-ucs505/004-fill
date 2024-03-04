@@ -65,6 +65,11 @@ function drawPolygonStrokes({
 function makeUniqueSvec2(svec2) {
   let result
 
+  console.info({
+    name: `makeUniqueSvec2`,
+    svec2,
+  })
+
   const cat = ([a,b]) => ((a<<16)+b)
   const split = (a) => ([a>>16, (a&0xFFFF)])
   

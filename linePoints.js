@@ -11,18 +11,18 @@ function getLinePoints([xp,yp], [xq,yq]) {
   isFlippedXy = false
   points = []
 
-  if (xq<yq) {
+  if (xq<xp) {
     // Swap p,q
     [xp,yp,xq,yq] = [xq,yq,xp,yp]
   }
 
   if (yq < yp) {
-    isFlippedY = true
+    isFlippedY = true;
     [yp, yq] = [-yp, -yq]
   }
 
   if (xq-xp < yq-yp) {
-    isFlippedXy = true
+    isFlippedXy = true;
     [xp,yp,xq,yq] = [yp,xp,yq,xq]
   }
 
@@ -30,6 +30,7 @@ function getLinePoints([xp,yp], [xq,yq]) {
 
   if (isFlippedXy) {
     points = points.map(([x,y]) => ([y,x]))
+    console.debug({points})
   }
 
   if (isFlippedY) {
@@ -56,6 +57,7 @@ function getLinePointsGentle([xp,yp], [xq,yq]) {
   dx = xq-xp
   dy = yq-yp
   d = dx - 2*dy
+  console.debug({x,y,d,dx,dy})
   while (x<xq) {
     x += 1
     y += (d<0)
