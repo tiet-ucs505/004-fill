@@ -3,7 +3,13 @@ function boundaryFill({
   boundaryColor,
   start,
   fillColor,
+  normalised = true,
 }) {
+  if (normalised) {
+   // De-normalise the points
+    [start] = denormalise(sel, [start])
+  }
+
   console.info({
     name: 'boundaryFill',
     sel,
@@ -14,8 +20,14 @@ function boundaryFill({
 }
 
 function floodFill({
-  sel, start, fillColor
+  sel, start, fillColor,
+  normalised = true,
 }) {
+  if (normalised) {
+   // De-normalise the points
+    [start] = denormalise(sel, [start])
+  }
+
   console.info({
     name: `floodFill`,
     sel, start, fillColor
@@ -28,7 +40,7 @@ function drawPolygonStrokes({
   strokeColor,
   normalised=true,
 }) {
-  let i, N, points
+  let i, N, points, p, q
 
   console.info({
     name: `drawPolygonStrokes`,
@@ -39,15 +51,8 @@ function drawPolygonStrokes({
   })
 
   if (normalised) {
-    // De-normalise the points
-    const canvas = document.querySelector(sel)
-    const {width: W, height: H}
-	  = canvas.getBoundingClientRect()
-    polygon = polygon.map(
-      ([x,y]) => ([
-	Math.ceil(x*W), Math.ceil(y*H),
-      ])
-    )
+   // De-normalise the points
+    polygon = denormalise(sel, polygon)
   }
 
   N = polygon.length
@@ -83,4 +88,18 @@ function makeUniqueSvec2(svec2) {
   result = [...new Set(result).values()]
   result = result.map(split)
   return result    
+}
+
+function denormalise(sel, points) {
+  const canvas = document.querySelector(sel)
+  const {width: W, height: H}
+	= canvas.getBoundingClientRect()
+
+  points = points.map(
+    ([x,y]) => ([
+      Math.ceil(x*W), Math.ceil(y*H),
+    ])
+  )
+
+  return points
 }
